@@ -6,6 +6,9 @@ import Layout from "./Layout/Layout.jsx";
 import Home from "./pages/Home.jsx";
 import NoteState from "./context/notes/noteState.jsx";
 import About from "./pages/About.jsx";
+import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
+
 
 const router = createBrowserRouter([
   {
@@ -18,7 +21,15 @@ const router = createBrowserRouter([
       },
       {
         path: "/about",
-        element: <About/>,
+        element: <About />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/register",
+        element: <Register />,
       }
     ],
   },
@@ -26,9 +37,9 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <NoteState>
+      <NoteState>
+        <RouterProvider router={router} />
 
-    <RouterProvider router={router} />
-    </NoteState>
+      </NoteState>
   </React.StrictMode>
 );

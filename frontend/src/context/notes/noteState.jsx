@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import NoteContext from "./noteContext";
 import axios from "axios";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const HOST_URL = "http://localhost:8000/api";
 const NoteState = (props) => {
   const initialNotes = [];
@@ -57,8 +58,10 @@ const NoteState = (props) => {
       };
 
       setNotes(notes.concat(note));
+      toast.success("Note added successfully");
     } catch (error) {
       console.log("🚀 ~ getNotes ~ error:", error);
+      toast.error(error.response.data.error);
     }
 
     // const note = {
@@ -88,31 +91,67 @@ const NoteState = (props) => {
       const data = response.data;
       console.log(data, "DELETE NOTE");
       setNotes(notes.filter((note) => note._id !== id));
+      toast.success("Note deleted successfully");
     } catch (error) {
       console.log("🚀 ~ deleteNote ~ error:", error);
+      toast.error(error.response.data.error);
     }
   };
   //EDIT A NOTE
 
-  const editNote = (id, title, content, tag) => {
+  const editNote = async (id, title, content, tag) => {
     console.log("EDIT", id);
-    const newNotes = notes.map((note) => {
-      if (note._id === id) {
-        note.title = title;
-        note.content = content;
-        note.tag = tag;
+    try {
+      const response = await axios.put(
+        `${HOST_URL}/notes/${id}`,
+        {
+          title: title,
+          content: content,
+          tag: tag,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "auth-token":
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmZlYWI1ZTkwMWI0OWYxZWVmMGFhNSIsImlhdCI6MTcwNzIzMDg1NCwiZXhwIjoxNzA4NTI2ODU0fQ.4cpqN34uwBpbGml0D_oBvcN_bdZMPOj42YeDwc6tMac",
+          },
+        }
+      );
+      const data = response.data;
+      console.log(data, "EDIT NOTE");
+      const newNotes = notes.map((note) => {
+        if (note._id === id) {
+          note.title = title;
+          note.content = content;
+          note.tag = tag;
+        }
+        return note;
+      });
+      setNotes(newNotes);
+      toast.success("Note updated successfully");
+    } catch (error) {
+      console.log("🚀 ~ editNote ~ error:", error);
+      if (error.response && error.response.status !== 200) {
+        // Handle non-2xx responses
+        toast.error(error.response.data.error);
+      } else {
+        // Handle other errors
+        toast.error("An error occurred while updating the note");
       }
-      return note;
-    });
-    setNotes(newNotes);
+    }
   };
+  
 
   return (
+    <>
     <NoteContext.Provider
       value={{ notes, addNote, deleteNote, editNote, getNotes }}
     >
       {props.children}
     </NoteContext.Provider>
+    <ToastContainer />
+    
+    </>
   );
 };
 

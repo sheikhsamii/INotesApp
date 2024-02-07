@@ -12,7 +12,7 @@ const Home = () => {
 
       {/* ADD A NOTE SECTION */}
       <AddNote />
-    <ItemNotes notes={notes}/>
+    <ItemNotes notes={notes} setNotes={setNotes}/>
      
     </div>
   );
