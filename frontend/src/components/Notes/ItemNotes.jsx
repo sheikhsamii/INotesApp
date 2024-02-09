@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { MdDelete, MdEdit } from "react-icons/md";
 import noteContext from "../../context/notes/noteContext";
 import Modal1 from "../Modals/Modal1";
+import { useNavigate } from "react-router-dom";
 
 const ItemNotes = ({ notes, setNotes }) => {
   const context = useContext(noteContext);
@@ -9,7 +10,7 @@ const ItemNotes = ({ notes, setNotes }) => {
 
   const [isEditOpen, setisEditOpen] = useState(false);
   const [currentNote, setCurrentNote] = useState(null);
-
+  const navigate = useNavigate();
   //HANDLE THE OPEN OF THE MODAL WHEN THE EDIT BUTTON IS CLICKED
   const handleEditModal = (note) => {
     console.log(note);
@@ -24,8 +25,13 @@ const ItemNotes = ({ notes, setNotes }) => {
   };
 
   useEffect(() => {
-    getNotes();
-  }, []);
+    if (localStorage.getItem("token")) {
+      getNotes();
+    } else {
+      setNotes([]);
+      navigate("/login");
+    }
+  }, [setNotes, navigate]);
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -44,7 +50,7 @@ const ItemNotes = ({ notes, setNotes }) => {
                 <span className="font-normal">{note.content}</span>
               </p>
               <p className="font-bold mt-3">
-               Tag: &nbsp;
+                Tag: &nbsp;
                 <span className="font-bold">{note.tag}</span>
               </p>
             </div>
@@ -60,10 +66,13 @@ const ItemNotes = ({ notes, setNotes }) => {
             </div>
           </div>
         ))}
-      {  isEditOpen  &&  <Modal1 
-          isOpen={isEditOpen} 
+      {isEditOpen && (
+        <Modal1
+          isOpen={isEditOpen}
           currentNote={currentNote}
-           closeModal={handleCloseModal} />}
+          closeModal={handleCloseModal}
+        />
+      )}
     </div>
   );
 };

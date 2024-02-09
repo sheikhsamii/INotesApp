@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import NoteContext from "./noteContext";
 import axios from "axios";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const HOST_URL = "http://localhost:8000/api";
 const NoteState = (props) => {
+  const token = JSON.parse(localStorage.getItem("token"));
   const initialNotes = [];
 
   const [notes, setNotes] = useState(initialNotes);
@@ -14,8 +15,7 @@ const NoteState = (props) => {
       const response = await axios.get(`${HOST_URL}/notes`, {
         headers: {
           "Content-Type": "application/json",
-          "auth-token":
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmZlYWI1ZTkwMWI0OWYxZWVmMGFhNSIsImlhdCI6MTcwNzIzMDg1NCwiZXhwIjoxNzA4NTI2ODU0fQ.4cpqN34uwBpbGml0D_oBvcN_bdZMPOj42YeDwc6tMac",
+          "auth-token": token,
         },
       });
       const data = response.data.notes;
@@ -40,8 +40,7 @@ const NoteState = (props) => {
         {
           headers: {
             "Content-Type": "application/json",
-            "auth-token":
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmZlYWI1ZTkwMWI0OWYxZWVmMGFhNSIsImlhdCI6MTcwNzIzMDg1NCwiZXhwIjoxNzA4NTI2ODU0fQ.4cpqN34uwBpbGml0D_oBvcN_bdZMPOj42YeDwc6tMac",
+            "auth-token": token,
           },
         }
       );
@@ -84,8 +83,7 @@ const NoteState = (props) => {
       const response = await axios.delete(`${HOST_URL}/notes/${id}`, {
         headers: {
           "Content-Type": "application/json",
-          "auth-token":
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmZlYWI1ZTkwMWI0OWYxZWVmMGFhNSIsImlhdCI6MTcwNzIzMDg1NCwiZXhwIjoxNzA4NTI2ODU0fQ.4cpqN34uwBpbGml0D_oBvcN_bdZMPOj42YeDwc6tMac",
+          "auth-token": token,
         },
       });
       const data = response.data;
@@ -112,8 +110,7 @@ const NoteState = (props) => {
         {
           headers: {
             "Content-Type": "application/json",
-            "auth-token":
-              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1YmZlYWI1ZTkwMWI0OWYxZWVmMGFhNSIsImlhdCI6MTcwNzIzMDg1NCwiZXhwIjoxNzA4NTI2ODU0fQ.4cpqN34uwBpbGml0D_oBvcN_bdZMPOj42YeDwc6tMac",
+            "auth-token": token,
           },
         }
       );
@@ -140,17 +137,15 @@ const NoteState = (props) => {
       }
     }
   };
-  
 
   return (
     <>
-    <NoteContext.Provider
-      value={{ notes, addNote, deleteNote, editNote, getNotes }}
-    >
-      {props.children}
-    </NoteContext.Provider>
-    <ToastContainer />
-    
+      <NoteContext.Provider
+        value={{ notes, setNotes, addNote, deleteNote, editNote, getNotes }}
+      >
+        {props.children}
+      </NoteContext.Provider>
+      <ToastContainer />
     </>
   );
 };
