@@ -4,9 +4,9 @@ import noteContext from "../../context/notes/noteContext";
 import Modal1 from "../Modals/Modal1";
 import { useNavigate } from "react-router-dom";
 
-const ItemNotes = ({ notes, setNotes }) => {
+const ItemNotes = () => {
   const context = useContext(noteContext);
-  const { deleteNote, getNotes } = context;
+  const { deleteNote, getNotes, notes, setNotes } = context;
 
   const [isEditOpen, setisEditOpen] = useState(false);
   const [currentNote, setCurrentNote] = useState(null);
@@ -28,10 +28,9 @@ const ItemNotes = ({ notes, setNotes }) => {
     if (localStorage.getItem("token")) {
       getNotes();
     } else {
-      setNotes([]);
       navigate("/login");
     }
-  }, [setNotes, navigate]);
+  }, [getNotes]);
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">

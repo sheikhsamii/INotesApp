@@ -5,7 +5,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const HOST_URL = "http://localhost:8000/api";
 const NoteState = (props) => {
-  const token = JSON.parse(localStorage.getItem("token"));
   const initialNotes = [];
 
   const [notes, setNotes] = useState(initialNotes);
@@ -15,7 +14,7 @@ const NoteState = (props) => {
       const response = await axios.get(`${HOST_URL}/notes`, {
         headers: {
           "Content-Type": "application/json",
-          "auth-token": token,
+          "auth-token": JSON.parse(localStorage.getItem("token")),
         },
       });
       const data = response.data.notes;
@@ -40,7 +39,7 @@ const NoteState = (props) => {
         {
           headers: {
             "Content-Type": "application/json",
-            "auth-token": token,
+            "auth-token": JSON.parse(localStorage.getItem("token")),
           },
         }
       );
@@ -83,7 +82,7 @@ const NoteState = (props) => {
       const response = await axios.delete(`${HOST_URL}/notes/${id}`, {
         headers: {
           "Content-Type": "application/json",
-          "auth-token": token,
+          "auth-token": JSON.parse(localStorage.getItem("token")),
         },
       });
       const data = response.data;
@@ -110,7 +109,7 @@ const NoteState = (props) => {
         {
           headers: {
             "Content-Type": "application/json",
-            "auth-token": token,
+            "auth-token": JSON.parse(localStorage.getItem("token")),
           },
         }
       );
@@ -138,10 +137,16 @@ const NoteState = (props) => {
     }
   };
 
+  //CLEAR Notes
+
+  const clearNotes = () => {
+    setNotes([]);
+  }
+
   return (
     <>
       <NoteContext.Provider
-        value={{ notes, setNotes, addNote, deleteNote, editNote, getNotes }}
+        value={{ notes, setNotes, addNote, deleteNote, editNote, getNotes, clearNotes }}
       >
         {props.children}
       </NoteContext.Provider>
