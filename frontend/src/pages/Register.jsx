@@ -152,8 +152,8 @@ const Register = () => {
                       console.log("🚀 ~ Register ~ response:", response);
                       if (response.status === 201) {
                         console.log("Account created successfully");
-                        toast.success("Account created successfully");
                         navigate("/login");
+                        toast.success("Account created successfully");
                       } else if (response.status === 400) {
                         console.log("User already exists");
                         toast.error("User already exists");
